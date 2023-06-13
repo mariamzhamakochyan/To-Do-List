@@ -2,15 +2,15 @@ from datetime import datetime, timedelta
 
 tasks = []
 
-def add_task():
+def add():
     task = input("Enter a new task: ")
     deadline = input("Enter the task deadline (YYYY-MM-DD HH:MM): ")
     deadline = datetime.strptime(deadline, "%Y-%m-%d %H:%M")
     tasks.append({"task": task, "deadline": deadline, "completed": False})
     print("Task added successfully!")
 
-def delete_task():
-    view_tasks()
+def delete():
+    view()
     if not tasks:
         return
     task_number = int(input("Enter the task number to delete: "))
@@ -20,8 +20,8 @@ def delete_task():
         removed_task = tasks.pop(task_number - 1)
         print(f"Task '{removed_task['task']}' removed successfully!")
 
-def modify_task():
-    view_tasks()
+def modify():
+    view()
     if not tasks:
         return
     task_number = int(input("Enter the task number to modify: "))
@@ -33,8 +33,8 @@ def modify_task():
         task["task"] = new_task
         print("Task modified successfully!")
 
-def mark_task_as_completed():
-    view_tasks()
+def completed():
+    view()
     if not tasks:
         return
     task_number = int(input("Enter the task number to mark as completed: "))
@@ -48,7 +48,7 @@ def mark_task_as_completed():
         else:
             print("Task is already marked as completed.")
 
-def view_tasks():
+def view():
     if not tasks:
         print("No tasks in the list.")
     else:
@@ -65,7 +65,7 @@ def view_tasks():
             else:
                 print(f"{index+1}. {status} {task['task']}")
 
-def show_task_stats():
+def show():
     total_tasks = len(tasks)
     completed_tasks = sum(task["completed"] for task in tasks)
     uncompleted_tasks = total_tasks - completed_tasks
@@ -73,7 +73,7 @@ def show_task_stats():
     print(f"Completed tasks: {completed_tasks}")
     print(f"Uncompleted tasks: {uncompleted_tasks}")
 
-def check_deadline_approaching():
+def deadline():
     for task in tasks:
         if not task["completed"]:
             time_remaining = task["deadline"] - datetime.now()
@@ -94,19 +94,19 @@ def main():
         choice = input("Enter your choice (1-8): ")
 
         if choice == "1":
-            add_task()
+            add()
         elif choice == "2":
-            view_tasks()
+            view()
         elif choice == "3":
-            modify_task()
+            modify()
         elif choice == "4":
-            delete_task()
+            delete()
         elif choice == "5":
-            mark_task_as_completed()
+            completed()
         elif choice == "6":
-            show_task_stats()
+            show()
         elif choice == "7":
-            check_deadline_approaching()
+            deadline()
         elif choice == "8":
             print("Exit!")
             break
