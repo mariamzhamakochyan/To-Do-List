@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>To Do List</title>
+    <style>
+        .completed {
+            text-decoration: line-through;
+        }
+        .approaching-deadline {
+            color: red;
+            font-weight: bold;
+        }
+        .deadline-message {
+            margin-top: 5px;
+            color: red;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>Task Hunter</h1>
+    <form id="add-form">
+        <input type="text" id="task-input" placeholder="Task" required>
+        <input type="datetime-local" id="deadline-input" required>
+        <button type="submit">Add Task</button>
+    </form>
+    <ul id="task-list">
+    </ul>
+
+    <script>
+        function addTask() {
+            const taskInput = document.getElementById('task-input');
+            const deadlineInput = document.getElementById('deadline-input');
+
+            const task = taskInput.value;
+            const deadline = deadlineInput.value;
+
+
+            const newTaskItem = document.createElement('li');
+
+            const descriptionSpan = document.createElement('span');
+            descriptionSpan.textContent = task;
+
+            const deadlineSpan = document.createElement('span');
+            deadlineSpan.textContent = deadline;
+
+            const completeButton = document.createElement('button');
+            completeButton.textContent = 'Complete';
+            completeButton.addEventListener('click', completeTask);
+
+            const modifyButton = document.createElement('button');
+            modifyButton.textContent = 'Modify';
+            modifyButton.addEventListener('click', modifyTask);
+
+            const deleteButton = document.createElement('button');
+            deleteButton.textContent = 'Delete';
+            deleteButton.addEventListener('click', deleteTask);
+
+            const deadlineMessageSpan = document.createElement('span');
+            deadlineMessageSpan.classList.add('deadline-message');
+
+            newTaskItem.appendChild(descriptionSpan);
+            newTaskItem.appendChild(deadlineSpan);
+            newTaskItem.appendChild(completeButton);
+            newTaskItem.appendChild(modifyButton);
+            newTaskItem.appendChild(deleteButton);
+            newTaskItem.appendChild(deadlineMessageSpan);
+
+            // Append task item to task list
+            const taskList = document.getElementById('task-list');
+            taskList.appendChild(newTaskItem);
+
+            taskInput.value = '';
+            deadlineInput.value = '';
+
+            checkDeadline(newTaskItem);
+        }
+
+        function completeTask(event) {
+            const taskItem = event.target.parentNode;
+            taskItem.classList.toggle('completed');
+        }
+
+        function modifyTask(event) {
+            const taskItem = event.target.parentNode;
+            const descriptionSpan = taskItem.querySelector('span:nth-child(1)');
+            const newDescription = prompt('Enter new task description:');
+            descriptionSpan.textContent = newDescription;
+        }
+
+        function deleteTask(event) {
+            const taskItem = event.target.parentNode;
+            taskItem.remove();
+        }
+
+        function checkDeadline(taskItem) {
+            const deadlineSpan = taskItem.querySelector('span:nth-child(2)');
+            const deadline = new Date(deadlineSpan.textContent);
+            const currentTime = new Date();
+
+            const timeDifference = deadline - currentTime;
+            const oneHour = 60 * 60 * 1000;
+
+            if (timeDifference < 0) {
+                taskItem.classList.add('deadline-message');
+                taskItem.classList.remove('approaching-deadline');
+                taskItem.querySelector('.deadline-message').textContent = 'Task out of deadline!';
+            } else if (timeDifference < oneHour) {
+                taskItem.classList.add('approaching-deadline');
+                taskItem.classList.remove('deadline-message');
+                taskItem.querySelector('.deadline-message').textContent = 'Task will be out of deadline!';
+            } else {
+                taskItem.classList.remove('approaching-deadline', 'deadline-message');
+                taskItem.querySelector('.deadline-message').textContent = '';
+            }
+        }
+
+        const addForm = document.getElementById('add-form');
+        addForm.addEventListener('submit', function(event) {
+            event.preventDefault();
+            addTask();
+        });
+
+        setInterval(function() {
+            const taskItems = document.querySelectorAll('#task-list li');
+            taskItems.forEach(checkDeadline);
+        }, 60000);
+    </script>
+</body>
+</html>
