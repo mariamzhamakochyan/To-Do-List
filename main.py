@@ -13,7 +13,6 @@ def delete_task():
     view_tasks()
     if not tasks:
         return
-
     task_number = int(input("Enter the task number to delete: "))
     if task_number <= 0 or task_number > len(tasks):
         print("Invalid task number.")
@@ -25,7 +24,6 @@ def modify_task():
     view_tasks()
     if not tasks:
         return
-
     task_number = int(input("Enter the task number to modify: "))
     if task_number <= 0 or task_number > len(tasks):
         print("Invalid task number.")
@@ -39,7 +37,6 @@ def mark_task_as_completed():
     view_tasks()
     if not tasks:
         return
-
     task_number = int(input("Enter the task number to mark as completed: "))
     if task_number <= 0 or task_number > len(tasks):
         print("Invalid task number.")
